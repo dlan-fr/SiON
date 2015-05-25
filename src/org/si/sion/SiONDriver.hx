@@ -14,6 +14,7 @@ import openfl.events.*;
 import openfl.media.*;
 import openfl.net.*;
 import openfl.display.Sprite;
+import flash.Lib;
 
 import openfl.utils.ByteArray;
 import org.si.utils.SLLint;
@@ -1024,7 +1025,7 @@ class SiONDriver extends Sprite implements ISiOPMWaveInterface
     public function fadeIn(time : Float) : Void
     {
         _fader.setFade(_fadeVolume, 0, 1, Math.floor(time * _sampleRate / _bufferLength));
-        _dispatchFadingEvent = (hasEventListener(SiONEvent.FADE_PROGRESS));
+        _dispatchFadingEvent = (Lib.current.hasEventListener(SiONEvent.FADE_PROGRESS));
     }
     
     
@@ -1034,7 +1035,7 @@ class SiONDriver extends Sprite implements ISiOPMWaveInterface
     public function fadeOut(time : Float) : Void
     {
         _fader.setFade(_fadeVolume, 1, 0, Std.int(time * _sampleRate / _bufferLength));
-        _dispatchFadingEvent = (hasEventListener(SiONEvent.FADE_PROGRESS));
+        _dispatchFadingEvent = (Lib.current.hasEventListener(SiONEvent.FADE_PROGRESS));
     }
     
     
@@ -1070,7 +1071,7 @@ class SiONDriver extends Sprite implements ISiOPMWaveInterface
      */
     public function forceDispatchStreamEvent(dispatch : Bool = true) : Void
     {
-        _dispatchStreamEvent = dispatch || (hasEventListener(SiONEvent.STREAM));
+        _dispatchStreamEvent = dispatch || (Lib.current.hasEventListener(SiONEvent.STREAM));
     }
     
     
@@ -1512,7 +1513,7 @@ class SiONDriver extends Sprite implements ISiOPMWaveInterface
     private function _queue_addAllEventListners() : Void
     {
         if (_listenEvent != NO_LISTEN)             throw errorDriverBusy(LISTEN_QUEUE);
-        addEventListener(Event.ENTER_FRAME, _queue_onEnterFrame, false, _eventListenerPrior);
+         Lib.current.addEventListener(Event.ENTER_FRAME, _queue_onEnterFrame, false, _eventListenerPrior);
         _listenEvent = LISTEN_QUEUE;
     }
     
@@ -1522,10 +1523,10 @@ class SiONDriver extends Sprite implements ISiOPMWaveInterface
     {
         trace('@@@@@@@@@@ Adding all event listeners!!');
         if (_listenEvent != NO_LISTEN) throw errorDriverBusy(LISTEN_PROCESS);
-        addEventListener(Event.ENTER_FRAME, _process_onEnterFrame, false, _eventListenerPrior);
-        if (hasEventListener(SiONTrackEvent.BEAT)) sequencer._setBeatCallback(_callbackBeat)
+        Lib.current.addEventListener(Event.ENTER_FRAME, _process_onEnterFrame, false, _eventListenerPrior);
+        if (Lib.current.hasEventListener(SiONTrackEvent.BEAT)) sequencer._setBeatCallback(_callbackBeat)
         else sequencer._setBeatCallback(null);
-        _dispatchStreamEvent = (hasEventListener(SiONEvent.STREAM));
+        _dispatchStreamEvent = (Lib.current.hasEventListener(SiONEvent.STREAM));
         _prevFrameTime = Math.round(haxe.Timer.stamp() * 1000);
         _listenEvent = LISTEN_PROCESS;
     }
@@ -1537,10 +1538,10 @@ class SiONDriver extends Sprite implements ISiOPMWaveInterface
         switch (_listenEvent)
         {
             case LISTEN_QUEUE:
-                removeEventListener(Event.ENTER_FRAME, _queue_onEnterFrame);
+                Lib.current.removeEventListener(Event.ENTER_FRAME, _queue_onEnterFrame);
             case LISTEN_PROCESS:
                 trace('@@@@@@@@@@ Removing ENTER_FRAME listener.');
-                removeEventListener(Event.ENTER_FRAME, _process_onEnterFrame);
+                Lib.current.removeEventListener(Event.ENTER_FRAME, _process_onEnterFrame);
                 sequencer._setBeatCallback(null);
                 _dispatchStreamEvent = false;
         }
@@ -2067,11 +2068,11 @@ class SiONDriver extends Sprite implements ISiOPMWaveInterface
     /** @private dispatch SiONMIDIEvent call from MIDIModule */
     private function _checkMIDIEventListeners() : Int
     {
-        return (((hasEventListener(SiONMIDIEvent.NOTE_ON))) ? SiONMIDIEventFlag.NOTE_ON : 0) |
-        (((hasEventListener(SiONMIDIEvent.NOTE_OFF))) ? SiONMIDIEventFlag.NOTE_OFF : 0) |
-        (((hasEventListener(SiONMIDIEvent.CONTROL_CHANGE))) ? SiONMIDIEventFlag.CONTROL_CHANGE : 0) |
-        (((hasEventListener(SiONMIDIEvent.PROGRAM_CHANGE))) ? SiONMIDIEventFlag.PROGRAM_CHANGE : 0) |
-        (((hasEventListener(SiONMIDIEvent.PITCH_BEND))) ? SiONMIDIEventFlag.PITCH_BEND : 0);
+        return (((Lib.current.hasEventListener(SiONMIDIEvent.NOTE_ON))) ? SiONMIDIEventFlag.NOTE_ON : 0) |
+        (((Lib.current.hasEventListener(SiONMIDIEvent.NOTE_OFF))) ? SiONMIDIEventFlag.NOTE_OFF : 0) |
+        (((Lib.current.hasEventListener(SiONMIDIEvent.CONTROL_CHANGE))) ? SiONMIDIEventFlag.CONTROL_CHANGE : 0) |
+        (((Lib.current.hasEventListener(SiONMIDIEvent.PROGRAM_CHANGE))) ? SiONMIDIEventFlag.PROGRAM_CHANGE : 0) |
+        (((Lib.current.hasEventListener(SiONMIDIEvent.PITCH_BEND))) ? SiONMIDIEventFlag.PITCH_BEND : 0);
     }
     
     
