@@ -661,6 +661,10 @@ class SiOPMChannelFM extends SiOPMChannelBase
     {
         // initialize operators
         _updateOperatorCount(1);
+		
+		if (operator[0] == null)
+			operator[0] = _allocFMOperator();
+		
         operator[0].initialize();
         _isNoteOn = false;
         registerMapType = 0;
