@@ -1718,7 +1718,11 @@ class SiONDriver extends Sprite implements ISiOPMWaveInterface
         _prepareProcess(data, resetEffector);
         
         // prepare rendering buffer
-        if (_renderBuffer == null) renderBuffer = new Array<Float>();
+        if (renderBuffer == null) 
+			_renderBuffer = new Array<Float>();
+		else
+			_renderBuffer = renderBuffer;
+		
         _renderBufferChannelCount = ((renderBufferChannelCount == 2)) ? 2 : 1;
         _renderBufferSizeMax = _renderBuffer.length;
         _renderBufferIndex = 0;
